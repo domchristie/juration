@@ -8,18 +8,18 @@ Examples
 --------
 Parse-able strings:
 
-*'12.4 secs'
-*'3 mins 4 sec'
-*'2 hrs 20 min'
-*'2h20min'
-*'6 mos 1 day'
-*'47 yrs 6 mos and 4d'
-*'3 weeks and 2 days'
+* '12.4 secs'
+* '3 mins 4 sec'
+* '2 hrs 20 min'
+* '2h20min'
+* '6 mos 1 day'
+* '47 yrs 6 mos and 4d'
+* '3 weeks and 2 days'
 
 Todo
 ----
-*Reverse operation i.e. output natural language format when given seconds
-*Parse chrono format i.e. hh:mm:ss
+* Reverse operation i.e. output natural language format when given seconds
+* Parse chrono format i.e. hh:mm:ss
 
 Licence
 -------
