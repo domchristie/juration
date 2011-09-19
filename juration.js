@@ -1,14 +1,70 @@
 window.juration = (function() {
-
-  var MAPPINGS = [
-    { units: ['year',   'yr',   'y'], value: 31536000 }, // doesn't account for leap years
-    { units: ['month',  'mon',  'mo'],value: 2592000 }, // iterating over month units first prevents 'm' (for minutes) matching 'months'
-    { units: ['day',    'dy',   'd'], value: 86400 },
-    { units: ['hour',   'hr',   'h'], value: 3600 },
-    { units: ['minute', 'min',  'm'], value: 60 },
-    { units: ['second', 'sec',  's'], value: 1 },
-    { units: ['week',   'wk',   'w'], value: 604800 } // minutes aren't used when stringifying so keep as last
-  ];
+  
+  var UNITS = {
+    seconds: {
+      matches: ['second', 'sec', 's'],
+      value: 1,
+      formats: {
+        'micro':  's',
+        'short':  'sec',
+        'long':   'second'
+      }
+    },
+    minutes: {
+      matches: ['minute', 'min', 'm'],
+      value: 60,
+      formats: {
+        'micro':  'm',
+        'short':  'min',
+        'long':   'minute'
+      }
+    },
+    hours: {
+      matches: ['hour', 'hr', 'h'],
+      value: 3600,
+      formats: {
+        'micro':  'h',
+        'short':  'hr',
+        'long':   'hour'
+      }
+    },
+    days: {
+      matches: ['day', 'dy', 'd'],
+      value: 86400,
+      formats: {
+        'micro':  'd',
+        'short':  'day',
+        'long':   'day'
+      }
+    },
+    weeks: {
+      matches: ['week', 'wk', 'w'],
+      value: 604800,
+      formats: {
+        'micro':  'w',
+        'short':  'wk',
+        'long':   'week'
+      }
+    },
+    months: {
+      matches: ['month', 'mon', 'mo', 'mth'],
+      value: 2592000,
+      formats: {
+        'micro':  'm',
+        'short':  'mth',
+        'long':   'month'
+      }
+    },
+    years: {
+      matches: ['year', 'yr', 'y'],
+      value: 31536000,
+      formats: {
+        'micro':  'y',
+        'short':  'yr',
+        'long':   'year'
+      }
+    }
+  };
   
   var pub = {
     
@@ -45,32 +101,22 @@ window.juration = (function() {
         }
       }
       
-      var values = [years, months, days, hours, minutes],
-          output = '',
-          formatCode;
+      var values = {
+            years: years,
+            months: months,
+            days: days,
+            hours: hours,
+            minutes: minutes,
+            seconds: seconds
+          },
+          output = '';
       
-      // Converts format string to code to be used with MAPPINGS[i].units
-      switch(opts.format) {
-        case 'micro':
-          formatCode = 2;
-          break;
-        case 'short':
-          formatCode = 1;
-          break;
-        case 'long':
-          formatCode = 0;
-          break;
-      }
-      
-      for(var i = 0, len = values.length; i < len; i++) {
-        if(values[i]) {
-          var unit = (opts.format === 'micro') ? MAPPINGS[i].units[formatCode] : pluralize(values[i], MAPPINGS[i].units[formatCode]);
+      for(var v in values) {
+        if(values[v]) {
           
-          output += values[i] + unit;
+          var unit = (opts.format === 'micro') ? UNITS[v].formats[opts.format] : pluralize(values[v], UNITS[v].formats[opts.format]);
           
-          if(opts.format !== 'micro') {
-            output += " ";
-          }
+          output += values[v] + (opts.format === 'micro' ? '' : ' ') + unit + ' ';
         }
       }
       
@@ -79,19 +125,28 @@ window.juration = (function() {
     },
     
     parse: function(string) {
-      for(var i = 0, mLen = MAPPINGS.length; i < mLen; i++) {
-        for(var j = 0, uLen = MAPPINGS[i].units.length; j < uLen; j++) {
-          var regex = new RegExp("((?:\\d+\\.\\d+)|\\d+)\\s?(" + MAPPINGS[i].units[j] + ")s?(?:\\b)?", 'gi');
+      // returns calculated values separated by spaces
+      for(var unit in UNITS) {
+        for(var i = 0, mLen = UNITS[unit].matches.length; i < mLen; i++) {
+          var regex = new RegExp("((?:\\d+\\.\\d+)|\\d+)\\s?(" + UNITS[unit].matches[i] + "s?(?=\\s|\\d|\\b))", 'gi');
           string = string.replace(regex, function(str, p1, p2) {
-            return (parseFloat(p1) * MAPPINGS[i].value).toString() + " ";
+            return " " + (parseFloat(p1) * UNITS[unit].value).toString() + " ";
           });
         }
       }
       var sum = 0,
-          numbers = string.replace(/(?!\.)\D+/g, ' ').replace(/\s$/g, '').split(' ');
+          // formats string into array of number, throwing an exception if it contains an unrecognisable string
+          numbers = string
+                      .replace(/(?!\.)\W+/g, ' ')
+                      .replace(/^\s+|\s+$|(?:and|plus|with)\s?/g, '')
+                      .split(' ');
+                      
       for(i = 0, nLen = numbers.length; i < nLen; i++) {
-        if(numbers[i]) {
+        if(numbers[i] && isFinite(numbers[i])) {
            sum += parseFloat(numbers[i]);
+        } else {
+          window.console && console.log("juration.parse(): Unable to parse: " + numbers[i].replace(/^\d+/g, ''));
+          throw "juration.parse(): Unable to parse: " + numbers[i].replace(/^\d+/g, '');
         }
       }
       return sum;
