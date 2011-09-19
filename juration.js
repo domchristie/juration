@@ -134,19 +134,20 @@ window.juration = (function() {
           });
         }
       }
+      
       var sum = 0,
-          // formats string into array of number, throwing an exception if it contains an unrecognisable string
           numbers = string
-                      .replace(/(?!\.)\W+/g, ' ')
-                      .replace(/^\s+|\s+$|(?:and|plus|with)\s?/g, '')
+                      .replace(/(?!\.)\W+/g, ' ')                       // replaces non-word chars (excluding '.') with whitespace
+                      .replace(/^\s+|\s+$|(?:and|plus|with)\s?/g, '')   // trim L/R whitespace, replace known join words with ''
                       .split(' ');
-                      
-      for(i = 0, nLen = numbers.length; i < nLen; i++) {
-        if(numbers[i] && isFinite(numbers[i])) {
-           sum += parseFloat(numbers[i]);
+      
+      // formats string into array of number, throwing an exception if it contains an unrecognisable string
+      for(var j = 0, nLen = numbers.length; i < nLen; j++) {
+        if(numbers[j] && isFinite(numbers[j])) {
+           sum += parseFloat(numbers[j]);
         } else {
-          window.console && console.log("juration.parse(): Unable to parse: " + numbers[i].replace(/^\d+/g, ''));
-          throw "juration.parse(): Unable to parse: " + numbers[i].replace(/^\d+/g, '');
+          window.console && console.log("juration.parse(): Unable to parse: " + numbers[j].replace(/^\d+/g, ''));
+          throw "juration.parse(): Unable to parse: " + numbers[j].replace(/^\d+/g, '');
         }
       }
       return sum;
