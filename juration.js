@@ -2,7 +2,7 @@ window.juration = (function() {
   
   var UNITS = {
     seconds: {
-      matches: ['second', 'sec', 's'],
+      patterns: ['second', 'sec', 's'],
       value: 1,
       formats: {
         'micro':  's',
@@ -11,7 +11,7 @@ window.juration = (function() {
       }
     },
     minutes: {
-      matches: ['minute', 'min', 'm'],
+      patterns: ['minute', 'min', 'm'],
       value: 60,
       formats: {
         'micro':  'm',
@@ -20,7 +20,7 @@ window.juration = (function() {
       }
     },
     hours: {
-      matches: ['hour', 'hr', 'h'],
+      patterns: ['hour', 'hr', 'h'],
       value: 3600,
       formats: {
         'micro':  'h',
@@ -29,7 +29,7 @@ window.juration = (function() {
       }
     },
     days: {
-      matches: ['day', 'dy', 'd'],
+      patterns: ['day', 'dy', 'd'],
       value: 86400,
       formats: {
         'micro':  'd',
@@ -38,7 +38,7 @@ window.juration = (function() {
       }
     },
     weeks: {
-      matches: ['week', 'wk', 'w'],
+      patterns: ['week', 'wk', 'w'],
       value: 604800,
       formats: {
         'micro':  'w',
@@ -47,7 +47,7 @@ window.juration = (function() {
       }
     },
     months: {
-      matches: ['month', 'mon', 'mo', 'mth'],
+      patterns: ['month', 'mon', 'mo', 'mth'],
       value: 2592000,
       formats: {
         'micro':  'm',
@@ -56,7 +56,7 @@ window.juration = (function() {
       }
     },
     years: {
-      matches: ['year', 'yr', 'y'],
+      patterns: ['year', 'yr', 'y'],
       value: 31536000,
       formats: {
         'micro':  'y',
@@ -127,8 +127,8 @@ window.juration = (function() {
     parse: function(string) {
       // returns calculated values separated by spaces
       for(var unit in UNITS) {
-        for(var i = 0, mLen = UNITS[unit].matches.length; i < mLen; i++) {
-          var regex = new RegExp("((?:\\d+\\.\\d+)|\\d+)\\s?(" + UNITS[unit].matches[i] + "s?(?=\\s|\\d|\\b))", 'gi');
+        for(var i = 0, mLen = UNITS[unit].patterns.length; i < mLen; i++) {
+          var regex = new RegExp("((?:\\d+\\.\\d+)|\\d+)\\s?(" + UNITS[unit].patterns[i] + "s?(?=\\s|\\d|\\b))", 'gi');
           string = string.replace(regex, function(str, p1, p2) {
             return " " + (parseFloat(p1) * UNITS[unit].value).toString() + " ";
           });
