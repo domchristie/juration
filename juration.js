@@ -1,3 +1,12 @@
+/*
+ * juration - a natural language duration parser
+ * https://github.com/domchristie/juration
+ *
+ * Copyright 2011, Dom Christie
+ * Licenced under the MIT licence
+ *
+ */
+ 
 window.juration = (function() {
   
   var UNITS = {
@@ -113,9 +122,7 @@ window.juration = (function() {
       
       for(var v in values) {
         if(values[v]) {
-          
           var unit = (opts.format === 'micro') ? UNITS[v].formats[opts.format] : pluralize(values[v], UNITS[v].formats[opts.format]);
-          
           output += values[v] + (opts.format === 'micro' ? '' : ' ') + unit + ' ';
         }
       }
