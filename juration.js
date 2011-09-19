@@ -142,7 +142,7 @@ window.juration = (function() {
                       .split(' ');
       
       // formats string into array of number, throwing an exception if it contains an unrecognisable string
-      for(var j = 0, nLen = numbers.length; i < nLen; j++) {
+      for(var j = 0, nLen = numbers.length; j < nLen; j++) {
         if(numbers[j] && isFinite(numbers[j])) {
            sum += parseFloat(numbers[j]);
         } else {
