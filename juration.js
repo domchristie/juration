@@ -141,12 +141,12 @@ window.juration = (function() {
                       .replace(/^\s+|\s+$|(?:and|plus|with)\s?/g, '')   // trim L/R whitespace, replace known join words with ''
                       .split(' ');
       
-      // formats string into array of number, throwing an exception if it contains an unrecognisable string
+      // formats string into array of number
       for(var j = 0, nLen = numbers.length; j < nLen; j++) {
         if(numbers[j] && isFinite(numbers[j])) {
            sum += parseFloat(numbers[j]);
         } else {
-          window.console && console.log("juration.parse(): Unable to parse: " + numbers[j].replace(/^\d+/g, ''));
+          // throw an exception if it's not a valid word/unit
           throw "juration.parse(): Unable to parse: " + numbers[j].replace(/^\d+/g, '');
         }
       }
