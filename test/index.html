@@ -45,10 +45,21 @@ $(function(){
     }
   });
   
+  test("parsing invalid words", function() {
+    var testCases = [
+      ["2 sausages 20 min", "juration.parse(): Unable to parse: sausages"],
+      ["2minths5days", "juration.parse(): Unable to parse: minths"]
+    ];
+    
+    for(var i = 0, len = testCases.length; i < len; i++) {
+      raises(function(){juration.parse(testCases[i][0]);});
+    }
+  });
+  
   test("stringifying seconds to short (default) natural language strings", function() {
     var testCases = [
-      [8400, "2hrs 20mins"],
-      [15638400, "6mons 1dy"]
+      [8400, "2 hrs 20 mins"],
+      [15638400, "6 mths 1 day"]
     ];
     
     for(var i = 0, len = testCases.length; i < len; i++) {
@@ -59,8 +70,8 @@ $(function(){
   
   test("stringifying seconds to micro natural language strings", function() {
     var testCases = [
-      [8400, "2h20m"],
-      [15638400, "6mo1d"]
+      [8400, "2h 20m"],
+      [15638400, "6m 1d"]
     ];
     
     for(var i = 0, len = testCases.length; i < len; i++) {
