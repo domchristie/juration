@@ -18,7 +18,6 @@ Parse-able strings:
 
 Todo
 ----
-* Reverse operation i.e. output natural language format when given seconds
 * Parse chrono format i.e. hh:mm:ss
 
 Licence
