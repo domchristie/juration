@@ -74,72 +74,73 @@ window.juration = (function() {
       }
     }
   };
-  
-  var pub = {
     
-    stringify: function(seconds, options) {
-      
-      var opts = {
-        format: (options && options.format) ? options.format : 'short'
-      };
-      
-      var units = ['years', 'months', 'days', 'hours', 'minutes', 'seconds'], values = [];
-      for(var i = 0, len = units.length; i < len; i++) {
-        if(i === 0) {
-          values[i] = parseInt(seconds / UNITS[units[i]].value, 10);
-        }
-        else {
-          values[i] = parseInt((seconds % UNITS[units[i-1]].value) / UNITS[units[i]].value, 10);
-        }
-        if(opts.format === 'micro') {
-          values[i] += UNITS[units[i]].formats[opts.format];
-        }
-        else {
-          values[i] += ' ' + pluralize(values[i], UNITS[units[i]].formats[opts.format]);
-        }
-      }
-      var output = '';
-      for(i = 0, len = values.length; i < len; i++) {
-        if(values[i].charAt(0) !== "0") {
-          output += values[i] + ' ';
-        }
-      }
-      return output.replace(/\s+$/, '');
-    },
+  stringify = function(seconds, options) {
     
-    parse: function(string) {
-      // returns calculated values separated by spaces
-      for(var unit in UNITS) {
-        for(var i = 0, mLen = UNITS[unit].patterns.length; i < mLen; i++) {
-          var regex = new RegExp("((?:\\d+\\.\\d+)|\\d+)\\s?(" + UNITS[unit].patterns[i] + "s?(?=\\s|\\d|\\b))", 'gi');
-          string = string.replace(regex, function(str, p1, p2) {
-            return " " + (p1 * UNITS[unit].value).toString() + " ";
-          });
-        }
+    var opts = {
+      format: (options && options.format) ? options.format : 'short'
+    };
+    
+    var units = ['years', 'months', 'days', 'hours', 'minutes', 'seconds'], values = [];
+    for(var i = 0, len = units.length; i < len; i++) {
+      if(i === 0) {
+        values[i] = parseInt(seconds / UNITS[units[i]].value, 10);
       }
-      
-      var sum = 0,
-          numbers = string
-                      .replace(/(?!\.)\W+/g, ' ')                       // replaces non-word chars (excluding '.') with whitespace
-                      .replace(/^\s+|\s+$|(?:and|plus|with)\s?/g, '')   // trim L/R whitespace, replace known join words with ''
-                      .split(' ');
-      
-      // formats string into array of number
-      for(var j = 0, nLen = numbers.length; j < nLen; j++) {
-        if(numbers[j] && isFinite(numbers[j])) {
-           sum += parseFloat(numbers[j]);
-        } else {
-          // throw an exception if it's not a valid word/unit
-          throw "juration.parse(): Unable to parse: " + numbers[j].replace(/^\d+/g, '');
-        }
+      else {
+        values[i] = parseInt((seconds % UNITS[units[i-1]].value) / UNITS[units[i]].value, 10);
       }
-      return sum;
+      if(opts.format === 'micro') {
+        values[i] += UNITS[units[i]].formats[opts.format];
+      }
+      else {
+        values[i] += ' ' + _pluralize(values[i], UNITS[units[i]].formats[opts.format]);
+      }
     }
+    var output = '';
+    for(i = 0, len = values.length; i < len; i++) {
+      if(values[i].charAt(0) !== "0") {
+        output += values[i] + ' ';
+      }
+    }
+    return output.replace(/\s+$/, '');
   };
   
-  pluralize = function(count, singular) {
+  parse = function(string) {
+    // returns calculated values separated by spaces
+    for(var unit in UNITS) {
+      for(var i = 0, mLen = UNITS[unit].patterns.length; i < mLen; i++) {
+        var regex = new RegExp("((?:\\d+\\.\\d+)|\\d+)\\s?(" + UNITS[unit].patterns[i] + "s?(?=\\s|\\d|\\b))", 'gi');
+        string = string.replace(regex, function(str, p1, p2) {
+          return " " + (p1 * UNITS[unit].value).toString() + " ";
+        });
+      }
+    }
+    
+    var sum = 0,
+        numbers = string
+                    .replace(/(?!\.)\W+/g, ' ')                       // replaces non-word chars (excluding '.') with whitespace
+                    .replace(/^\s+|\s+$|(?:and|plus|with)\s?/g, '')   // trim L/R whitespace, replace known join words with ''
+                    .split(' ');
+    
+    // formats string into array of number
+    for(var j = 0, nLen = numbers.length; j < nLen; j++) {
+      if(numbers[j] && isFinite(numbers[j])) {
+         sum += parseFloat(numbers[j]);
+      } else {
+        // throw an exception if it's not a valid word/unit
+        throw "juration.parse(): Unable to parse: " + numbers[j].replace(/^\d+/g, '');
+      }
+    }
+    return sum;
+  };
+  
+  _pluralize = function(count, singular) {
     return count == 1 ? singular : singular + "s";
   };
   
-  return pub;
+  return {
+    parse: parse,
+    stringify: stringify,
+    humanize: stringify
+  };
 })();
