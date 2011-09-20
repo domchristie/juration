@@ -48,7 +48,9 @@ $(function(){
   test("parsing invalid words", function() {
     var testCases = [
       ["2 sausages 20 min", "juration.parse(): Unable to parse: sausages"],
-      ["2minths5days", "juration.parse(): Unable to parse: minths"]
+      ["2minths5dhs", "juration.parse(): Unable to parse: minths"],
+      ["165hras", "juration.parse(): Unable to parse: hras"],
+      ["15 dayz", "juration.parse(): Unable to parse: dayz"]
     ];
     
     for(var i = 0, len = testCases.length; i < len; i++) {
@@ -59,7 +61,13 @@ $(function(){
   test("stringifying seconds to short (default) natural language strings", function() {
     var testCases = [
       [8400, "2 hrs 20 mins"],
-      [15638400, "6 mths 1 day"]
+      [15638400, "6 mths 1 day"],
+      [9000, "2 hrs 30 mins"],
+      [14461, '4 hrs 1 min 1 sec'],
+      [226800, "2 days 15 hrs"],
+      [80.51928, '1 min 20.51928 secs'],
+      [260703, '3 days 25 mins 3 secs'],
+      [15555600, '6 mths 1 hr']
     ];
     
     for(var i = 0, len = testCases.length; i < len; i++) {
