@@ -1,4 +1,4 @@
-juration
+Juration
 ========
 
 A simple natural language duration parser written in javascript.
@@ -25,4 +25,4 @@ Todo
 
 Licence
 -------
-juration is released under the MIT license.
+Juration is released under the MIT license.
