@@ -83,52 +83,28 @@ window.juration = (function() {
         format: (options && options.format) ? options.format : 'short'
       };
       
-      var years, months, days, hours, minutes;
-          
-      if(seconds >= 60) {
-        minutes = parseInt(seconds / 60, 10);
-        seconds = seconds % 60;
-        
-        if(minutes >= 60) {
-          hours = parseInt(minutes / 60, 10);
-          minutes = minutes % 60;
-          
-          if(hours >= 24) {
-            days = parseInt(hours / 24, 10);
-            hours = hours % 24;
-            
-            if(days >= 30) {
-              months = parseInt(days / 30, 10);
-              days = days % 30;
-              
-              if(months >= 12) {
-                years = parseInt(months / 12, 10);
-                months = months % 12;
-              }
-            }
-          }
+      var units = ['years', 'months', 'days', 'hours', 'minutes', 'seconds'], values = [];
+      for(var i = 0, len = units.length; i < len; i++) {
+        if(i === 0) {
+          values[i] = parseInt(seconds / UNITS[units[i]].value, 10);
+        }
+        else {
+          values[i] = parseInt((seconds % UNITS[units[i-1]].value) / UNITS[units[i]].value, 10);
+        }
+        if(opts.format === 'micro') {
+          values[i] += UNITS[units[i]].formats[opts.format];
+        }
+        else {
+          values[i] += ' ' + pluralize(values[i], UNITS[units[i]].formats[opts.format]);
         }
       }
-      
-      var values = {
-            years: years,
-            months: months,
-            days: days,
-            hours: hours,
-            minutes: minutes,
-            seconds: seconds
-          },
-          output = '';
-      
-      for(var v in values) {
-        if(values[v]) {
-          var unit = (opts.format === 'micro') ? UNITS[v].formats[opts.format] : pluralize(values[v], UNITS[v].formats[opts.format]);
-          output += values[v] + (opts.format === 'micro' ? '' : ' ') + unit + ' ';
+      var output = '';
+      for(i = 0, len = values.length; i < len; i++) {
+        if(values[i].charAt(0) !== "0") {
+          output += values[i] + ' ';
         }
       }
-      
-      // trim trailing whitespace and return
-      return output.replace(/\s$/, '');
+      return output.replace(/\s+$/, '');
     },
     
     parse: function(string) {
@@ -137,7 +113,7 @@ window.juration = (function() {
         for(var i = 0, mLen = UNITS[unit].patterns.length; i < mLen; i++) {
           var regex = new RegExp("((?:\\d+\\.\\d+)|\\d+)\\s?(" + UNITS[unit].patterns[i] + "s?(?=\\s|\\d|\\b))", 'gi');
           string = string.replace(regex, function(str, p1, p2) {
-            return " " + (parseFloat(p1) * UNITS[unit].value).toString() + " ";
+            return " " + (p1 * UNITS[unit].value).toString() + " ";
           });
         }
       }
