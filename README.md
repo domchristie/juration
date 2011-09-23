@@ -1,9 +1,7 @@
 Juration
 ========
 
-A simple natural language duration parser written in javascript.
-
-Parsing returns a value in seconds.
+A simple natural language duration parser written in javascript. Time ranges (in seconds) can also be converted to human readable strings.
 
 Inspired by [chronic](https://github.com/mojombo/chronic/), and [chronic_duration](https://github.com/hpoydar/chronic_duration).
 
