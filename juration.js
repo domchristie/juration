@@ -106,6 +106,7 @@ window.juration = (function() {
   };
   
   parse = function(string) {
+    
     // returns calculated values separated by spaces
     for(var unit in UNITS) {
       for(var i = 0, mLen = UNITS[unit].patterns.length; i < mLen; i++) {
@@ -124,8 +125,12 @@ window.juration = (function() {
     
     // formats string into array of number
     for(var j = 0, nLen = numbers.length; j < nLen; j++) {
+      window.console && console.log(numbers[j]);
       if(numbers[j] && isFinite(numbers[j])) {
          sum += parseFloat(numbers[j]);
+      } else if(!numbers[j]) {
+        window.console && console.log("juration.parse(): Unable to parse: " + typeof numbers[j]);
+        throw "juration.parse(): Unable to parse: " + typeof numbers[j];
       } else {
         // throw an exception if it's not a valid word/unit
         throw "juration.parse(): Unable to parse: " + numbers[j].replace(/^\d+/g, '');
