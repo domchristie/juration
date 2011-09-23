@@ -77,6 +77,10 @@ window.juration = (function() {
     
   stringify = function(seconds, options) {
     
+    if(!_isNumeric(seconds)) {
+      throw "juration.stringify(): Unable to stringify a non-numeric value";
+    }
+    
     var opts = {
       format: (options && options.format) ? options.format : 'short'
     };
@@ -125,7 +129,6 @@ window.juration = (function() {
     
     // formats string into array of number
     for(var j = 0, nLen = numbers.length; j < nLen; j++) {
-      window.console && console.log(numbers[j]);
       if(numbers[j] && isFinite(numbers[j])) {
          sum += parseFloat(numbers[j]);
       } else if(!numbers[j]) {
@@ -140,6 +143,10 @@ window.juration = (function() {
   
   _pluralize = function(count, singular) {
     return count == 1 ? singular : singular + "s";
+  };
+  
+  _isNumeric = function(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
   };
   
   return {

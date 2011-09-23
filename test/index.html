@@ -109,6 +109,18 @@ $(function(){
       equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
     }
   });
+  
+  test("stringifying non-numeric values", function() {
+    var testCases = [
+      ["", "juration.stringify(): Unable to stringify a non-numeric value"],
+      ["a bunt", "juration.stringify(): Unable to stringify a non-numeric value"],
+      [null, "juration.stringify(): Unable to stringify a non-numeric value"]
+    ];
+    
+    for(var i = 0, len = testCases.length; i < len; i++) {
+      raises(function(){juration.stringify(testCases[i][0]);});
+    }
+  });
 });
   
 </script>
