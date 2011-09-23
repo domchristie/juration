@@ -7,6 +7,20 @@ Parsing returns a value in seconds.
 
 Inspired by [chronic](https://github.com/mojombo/chronic/), and [chronic_duration](https://github.com/hpoydar/chronic_duration).
 
+Usage
+-----
+
+### Parsing
+
+    juration.parse("3mins 5secs"); // returns 185
+
+### Stringifying
+    
+    juration.stringify(185); // returns "3 mins 5 secs"
+    juration.stringify(185, { format: 'small' }); // returns "3 mins 5 secs"
+    juration.stringify(185, { format: 'micro' }); // returns "3m 5s"
+    juration.stringify(185, { format: 'long' });  // returns "3 minutes 5 seconds"
+
 Examples
 --------
 Parse-able strings:
