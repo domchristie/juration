@@ -33,6 +33,7 @@ Parse-able strings:
 
 Todo
 ----
+* Add customisable default unit option, e.g. `juration.parse("10", { defaultUnit: 'minutes' }) // returns 600`
 * Parse chrono format i.e. hh:mm:ss
 
 Licence
