@@ -65,7 +65,6 @@ $(function(){
       [9000, "2 hrs 30 mins"],
       [14461, '4 hrs 1 min 1 sec'],
       [226800, "2 days 15 hrs"],
-      [80.51928, '1 min 20.51928 secs'],
       [260703, '3 days 25 mins 3 secs'],
       [15555600, '6 mths 1 hr']
     ];
@@ -79,7 +78,12 @@ $(function(){
   test("stringifying seconds to micro natural language strings", function() {
     var testCases = [
       [8400, "2h 20m"],
-      [15638400, "6m 1d"]
+      [15638400, "6m 1d"],
+      [9000, "2h 30m"],
+      [14461, '4h 1m 1s'],
+      [226800, "2d 15h"],
+      [260703, '3d 25m 3s'],
+      [15555600, '6m 1h']
     ];
     
     for(var i = 0, len = testCases.length; i < len; i++) {
