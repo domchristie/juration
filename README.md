@@ -3,7 +3,7 @@ Juration.js
 
 A simple natural language duration parser written in javascript. Time ranges (in seconds) can also be converted to human readable strings.
 
-Check out the demo: http://domchristie.github.com/juration
+[Demo](http://domchristie.github.com/juration)
 
 Inspired by [chronic](https://github.com/mojombo/chronic/), and [chronic_duration](https://github.com/hpoydar/chronic_duration).
 
