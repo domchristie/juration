@@ -12,7 +12,9 @@
     line-height: 1.4;
   }
   .result {
+    margin: 0.25em 0;
     padding: 4px;
+    display: inline-block;
   }
   .error {
     background: #FBE3E4;
@@ -46,7 +48,7 @@
     
     function stringifySeconds() {
       try {
-        var stringified = juration.stringify($(this).val());
+        var stringified = juration.stringify($(this).val(), { format: $('[name=format]').val() });
         $('#stringify-result')
           .removeClass('error')
           .addClass('success')
@@ -62,6 +64,11 @@
     $(function(){
       $('[name=parser]').keyup( $.debounce(250, parseString) );
       $('[name=stringifier]').keyup( $.debounce(250, stringifySeconds) );
+      $('[name=format]').change(function() {
+        if($('[name=stringifier]').val()) {
+          $('[name=stringifier]').trigger('keyup');
+        }
+      });
     });
   })();
 </script>
@@ -72,14 +79,24 @@
   
   <h2>Try it</h2>
   <div style="margin-bottom: 1em">
-    <label for="parser">Parsing a string:</label>
-    <input name="parser" type="text" />
-    <span class="result" id="parse-result"></span>
+    <div>
+      <label for="parser">Parsing a string:</label>
+      <input name="parser" type="text" />
+    </div>
+    <div class="result" id="parse-result"></div>
   </div>
   <div>
-    <label for="stringifier">Stringify a number of seconds:</label>
-    <input name="stringifier" type="text" />
-    <span class="result" id="stringify-result"></span>
+    <div>
+      <label for="stringifier">Stringify seconds:</label>
+      <input name="stringifier" type="text" />
+      <select name="format">
+        <option value="">Choose a format</option>
+        <option value="micro">Micro</option>
+        <option value="short">Short (default)</option>
+        <option value="long">Long</option>
+      </select>
+    </div>
+    <div class="result" id="stringify-result"></div>
   </div>
   
   <p>Contribute on <a href="https://github.com/domchristie/juration">GitHub</a></p>
