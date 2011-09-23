@@ -127,7 +127,6 @@ window.juration = (function() {
                     .replace(/^\s+|\s+$|(?:and|plus|with)\s?/g, '')   // trim L/R whitespace, replace known join words with ''
                     .split(' ');
     
-    // formats string into array of number
     for(var j = 0, nLen = numbers.length; j < nLen; j++) {
       if(numbers[j] && isFinite(numbers[j])) {
          sum += parseFloat(numbers[j]);
