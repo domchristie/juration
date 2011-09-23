@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>iOS Placeholder jQuery Plugin</title>
+<title>Juration - a natural language date parser/stringifier</title>
 <link rel="stylesheet" href="normalise.css"></link>
 <style>
   body {
@@ -11,40 +11,77 @@
     font-family: sans-serif;
     line-height: 1.4;
   }
+  .result {
+    padding: 4px;
+  }
   .error {
     background: #FBE3E4;
     color: #8A1F11;
   }
+  .success {
+    background: #E6EFC2;
+    color: #264409;
+  }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
+<script src="throttle-debounce.jquery.min.js"></script>
 <script src="https://raw.github.com/domchristie/juration/master/juration.js"></script>
 <script>
-  $(function(){
-    $('[name=parser]').keyup(function() {
+  (function() {
+    function parseString() {
       try {
         var parsed = juration.parse($(this).val());
         $('#parse-result')
           .removeClass('error')
+          .addClass('success')
           .text('Result: ' + parsed);
       }
       catch(e) {
-        window.console && console.log(e);
         $('#parse-result')
+          .removeClass('success')
           .addClass('error')
           .text(e);
       }
+    }
+    
+    function stringifySeconds() {
+      try {
+        var stringified = juration.stringify($(this).val());
+        $('#stringify-result')
+          .removeClass('error')
+          .addClass('success')
+          .text('Result: ' + stringified);
+      }
+      catch(e) {
+        $('#stringify-result')
+          .removeClass('success')
+          .addClass('error')
+          .text(e);
+      }
+    }
+    $(function(){
+      $('[name=parser]').keyup( $.debounce(250, parseString) );
+      $('[name=stringifier]').keyup( $.debounce(250, stringifySeconds) );
     });
-  });
+  })();
 </script>
 </head>
 <body>
   <h1>Juration</h1>
-  <p>Juration is a natural language time range (or duration) parser/stringifyer written in javascript.</p>
+  <p>Juration is a natural language time range parser written in javascript. It can also stringify durations (in seconds) into human readable strings.</p>
   
   <h2>Try it</h2>
-  <label for="parser">Parsing a string:</label>
-  <input name="parser" type="text" />
-  <span id="parse-result"></span>
+  <div style="margin-bottom: 1em">
+    <label for="parser">Parsing a string:</label>
+    <input name="parser" type="text" />
+    <span class="result" id="parse-result"></span>
+  </div>
+  <div>
+    <label for="stringifier">Stringify a number of seconds:</label>
+    <input name="stringifier" type="text" />
+    <span class="result" id="stringify-result"></span>
+  </div>
+  
   <p>Contribute on <a href="https://github.com/domchristie/juration">GitHub</a></p>
 </body>
 </html>
