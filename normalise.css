@@ -85,7 +85,6 @@ body {
 body,
 button,
 input,
-select,
 textarea {
     font-family: sans-serif;
 }
@@ -330,7 +329,6 @@ legend {
 
 button,
 input,
-select,
 textarea {
     font-size: 100%; /* 1 */
     margin: 0; /* 2 */
