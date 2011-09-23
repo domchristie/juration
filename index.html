@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>iOS Placeholder jQuery Plugin</title>
+<link rel="stylesheet" href="normalise.css"></link>
+<style>
+  body {
+    width: 751.538px;
+    margin: 0 auto;
+    font-family: sans-serif;
+    line-height: 1.4;
+  }
+  .error {
+    background: #FBE3E4;
+    color: #8A1F11;
+  }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
+<script src="https://raw.github.com/domchristie/juration/master/juration.js"></script>
+<script>
+  $(function(){
+    $('[name=parser]').keyup(function() {
+      try {
+        var parsed = juration.parse($(this).val());
+        $('#parse-result')
+          .removeClass('error')
+          .text('Result: ' + parsed);
+      }
+      catch(e) {
+        window.console && console.log(e);
+        $('#parse-result')
+          .addClass('error')
+          .text(e);
+      }
+    });
+  });
+</script>
+</head>
+<body>
+  <h1>Juration</h1>
+  <p>Juration is a natural language time range (or duration) parser/stringifyer written in javascript.</p>
+  
+  <h2>Try it</h2>
+  <label for="parser">Parsing a string:</label>
+  <input name="parser" type="text" />
+  <span id="parse-result"></span>
+  <p>Contribute on <a href="https://github.com/domchristie/juration">GitHub</a></p>
+</body>
+</html>
