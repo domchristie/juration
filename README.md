@@ -1,4 +1,4 @@
-Juration
+Juration.js
 ========
 
 A simple natural language duration parser written in javascript. Time ranges (in seconds) can also be converted to human readable strings.
@@ -37,4 +37,4 @@ Todo
 
 Licence
 -------
-Juration is released under the MIT license.
+Juration is copyright &copy; 2011 [Dom Christie](http://domchristie.co.uk) and released under the MIT license.
