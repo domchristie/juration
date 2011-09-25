@@ -20,7 +20,7 @@ window.juration = (function() {
       }
     },
     minutes: {
-      patterns: ['minute', 'min', 'm'],
+      patterns: ['minute', 'min', 'm(?!s)'],
       value: 60,
       formats: {
         'micro':  'm',
