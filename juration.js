@@ -81,9 +81,11 @@ window.juration = (function() {
       throw "juration.stringify(): Unable to stringify a non-numeric value";
     }
     
-    var opts = {
-      format: (options && options.format) ? options.format : 'short'
+    var defaults = {
+      format: 'short'
     };
+    
+    var opts = _extend(defaults, options);
     
     var units = ['years', 'months', 'days', 'hours', 'minutes', 'seconds'], values = [];
     for(var i = 0, len = units.length; i < len; i++) {
@@ -146,6 +148,13 @@ window.juration = (function() {
   
   var _isNumeric = function(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
+  };
+  
+  var _extend = function(obj, extObj) {
+    for (var i in extObj) {
+      obj[i] = extObj[i];
+    }
+    return obj;
   };
   
   return {
