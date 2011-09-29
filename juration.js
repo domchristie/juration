@@ -75,7 +75,7 @@ window.juration = (function() {
     }
   };
     
-  stringify = function(seconds, options) {
+  var stringify = function(seconds, options) {
     
     if(!_isNumeric(seconds)) {
       throw "juration.stringify(): Unable to stringify a non-numeric value";
@@ -109,7 +109,7 @@ window.juration = (function() {
     return output.replace(/\s+$/, '');
   };
   
-  parse = function(string) {
+  var parse = function(string) {
     
     // returns calculated values separated by spaces
     for(var unit in UNITS) {
@@ -140,11 +140,11 @@ window.juration = (function() {
     return sum;
   };
   
-  _pluralize = function(count, singular) {
+  var _pluralize = function(count, singular) {
     return count == 1 ? singular : singular + "s";
   };
   
-  _isNumeric = function(n) {
+  var _isNumeric = function(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
   };
   
