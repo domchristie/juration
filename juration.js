@@ -81,6 +81,10 @@ window.juration = (function() {
       throw "juration.stringify(): Unable to stringify a non-numeric value";
     }
     
+    if((typeof options === 'object' && options.format !== undefined) && (options.format !== 'micro' && options.format !== 'short' && options.format !== 'long')) {
+      throw "juration.stringify(): format cannot be '" + options.format + "', and must be either 'micro', 'short', or 'long'";
+    }
+    
     var defaults = {
       format: 'short'
     };
@@ -152,7 +156,9 @@ window.juration = (function() {
   
   var _extend = function(obj, extObj) {
     for (var i in extObj) {
-      obj[i] = extObj[i];
+      if(extObj[i] !== undefined) {
+        obj[i] = extObj[i];
+      }
     }
     return obj;
   };

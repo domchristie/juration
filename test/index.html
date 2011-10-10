@@ -122,6 +122,14 @@ $(function(){
       raises(function(){juration.stringify(testCases[i][0]);});
     }
   });
+  
+  test("stringifying values with an undefined/unknown format", function() {
+    var parsed = juration.stringify(8400, { format: undefined });
+    equal(parsed, "2 hrs 20 mins", "We expect 8400 to be 2 hrs 20 mins");
+    
+    raises(function(){juration.stringify(8400, { format: 'horses' });});
+  });
+  
 });
   
 </script>
