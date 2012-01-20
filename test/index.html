@@ -36,7 +36,8 @@ $(function(){
       ["3m, 4s", 3 * 60 + 4],
       ["3m,4s", 3 * 60 + 4],
       ["3m4s", 3 * 60 + 4],
-      ["3mon4sec", 3 * 30 * 24 * 3600 + 4]
+      ["3mon4sec", 3 * 30 * 24 * 3600 + 4],
+      ["15s", 15]
     ];
     
     for(var i = 0, len = testCases.length; i < len; i++) {
@@ -62,6 +63,7 @@ $(function(){
   
   test("stringifying seconds to chrono natural language strings", function() {
     var testCases = [
+      [5, "5"],
       [8400, "2:20:00"],
       [15638400, "6:01:00:00:00"],
       [9000, "2:30:00"],
@@ -79,6 +81,7 @@ $(function(){
   
   test("stringifying seconds to short (default) natural language strings", function() {
     var testCases = [
+      [5, "5 secs"],
       [8400, "2 hrs 20 mins"],
       [15638400, "6 mths 1 day"],
       [9000, "2 hrs 30 mins"],
@@ -96,6 +99,7 @@ $(function(){
   
   test("stringifying seconds to micro natural language strings", function() {
     var testCases = [
+      [5, "5s"],
       [8400, "2h 20m"],
       [15638400, "6m 1d"],
       [9000, "2h 30m"],
@@ -113,6 +117,7 @@ $(function(){
   
   test("stringifying seconds to long natural language strings", function() {
     var testCases = [
+      [5, "5 seconds"],
       [8400, "2 hours 20 minutes"],
       [15638400, "6 months 1 day"],
       [9000, "2 hours 30 minutes"],

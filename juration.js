@@ -101,10 +101,10 @@ window.juration = (function() {
     var units = ['years', 'months', 'days', 'hours', 'minutes', 'seconds'], values = [];
     for(var i = 0, len = units.length; i < len; i++) {
       if(i === 0) {
-        values[i] = parseInt(seconds / UNITS[units[i]].value, 10);
+        values[i] = parseInt((seconds / UNITS[units[i]].value).toFixed(3),10);
       }
       else {
-        values[i] = parseInt((seconds % UNITS[units[i-1]].value) / UNITS[units[i]].value, 10);
+        values[i] = parseInt(((seconds % UNITS[units[i-1]].value) / UNITS[units[i]].value).toFixed(3),10);
       }
       if(opts.format === 'micro' || opts.format === 'chrono') {
         values[i] += UNITS[units[i]].formats[opts.format];
