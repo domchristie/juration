@@ -119,7 +119,7 @@ window.juration = (function() {
         output += values[i] + ' ';
       }
       else if (opts.format == 'chrono') {
-        output += _pad_left(values[i]+'', '0', i==values.length-1 ? 2 : 3);
+        output += _padLeft(values[i]+'', '0', i==values.length-1 ? 2 : 3);
       }
     }
     return output.replace(/\s+$/, '').replace(/^(00:)+/g, '').replace(/^0/, '');
@@ -156,8 +156,8 @@ window.juration = (function() {
     return sum;
   };
   
-  // _pad_left('5', '0', 2); // 05
-  var _pad_left = function(s, c, n) {
+  // _padLeft('5', '0', 2); // 05
+  var _padLeft = function(s, c, n) {
       if (! s || ! c || s.length >= n) {
         return s;
       }
@@ -168,7 +168,7 @@ window.juration = (function() {
       }
       
       return s;
-  }
+  };
   
   var _pluralize = function(count, singular) {
     return count == 1 ? singular : singular + "s";
