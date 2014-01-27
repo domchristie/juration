@@ -6,9 +6,9 @@
  * Licenced under the MIT licence
  *
  */
- 
-window.juration = (function() {
-  
+
+(function() {
+
   var UNITS = {
     seconds: {
       patterns: ['second', 'sec', 's'],
@@ -187,9 +187,22 @@ window.juration = (function() {
     return obj;
   };
   
-  return {
+  var juration = {
     parse: parse,
     stringify: stringify,
     humanize: stringify
   };
+
+  if ( typeof module === "object" && module && typeof module.exports === "object" ) {
+    //loaders that implement the Node module pattern (including browserify)
+    module.exports = juration;
+  } else {
+    // Otherwise expose juration
+    window.juration = juration;
+
+    // Register as a named AMD module
+    if ( typeof define === "function" && define.amd ) {
+      define("juration", [], function () { return juration; } );
+    }
+  }
 })();
