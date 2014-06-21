@@ -73,6 +73,17 @@ $(function(){
     }
   });
   
+  test("parsing when no units are supplied", function() {
+    var parsed = juration.parse('3600');
+    equal(parsed, 3600, "We expect '3600' to be 3600");
+
+    var parsed = juration.parse('3600', {defaultUnit: 'seconds'});
+    equal(parsed, 3600, "We expect '3600' to be 3600");
+
+    var parsed = juration.parse('90', {defaultUnit: 'minutes'});
+    equal(parsed, 90 * MINUTE, "We expect '90' to be 5400");
+    });
+
   test("stringifying seconds to chrono natural language strings", function() {
     var testCases = [
       [5, "5"],
