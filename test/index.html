@@ -150,6 +150,28 @@ $(function(){
     }
   });
   
+  test("stringifying with 'units' option", function() {
+    var testCases = [
+      [5, "", 0],
+      [5, "5 seconds", 1],
+      [5, "5 seconds", 2],
+      [5 * 60 + 5, "5 minutes", 1],
+      [5 * 60 + 5, "5 minutes 5 seconds", 2],
+      [5 * 60 + 5, "5 minutes 5 seconds", 3],
+      [5 * 3600 + 5 * 60 + 5, "5 hours", 1],
+      [5 * 3600 + 5 * 60 + 5, "5 hours 5 minutes", 2],
+      [5 * 3600 + 5 * 60 + 5, "5 hours 5 minutes 5 seconds", 3],
+      [5 * 3600 + 5 * 60 + 5, "5 hours 5 minutes 5 seconds", 4],
+      [5 * 3600 + 0 * 60 + 5, "5 hours", 2],
+      [5 * 3600 + 0 * 60 + 5, "5 hours 5 seconds", 3]
+    ];
+
+    for(var i = 0, len = testCases.length; i < len; i++) {
+      var parsed = juration.stringify(testCases[i][0], { format: 'long', units: testCases[i][2] });
+      equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " with units " + testCases[i][2] + " to be " + testCases[i][1]);
+    }
+  });
+
   test("stringifying non-numeric values", function() {
     var testCases = [
       ["", "juration.stringify(): Unable to stringify a non-numeric value"],
