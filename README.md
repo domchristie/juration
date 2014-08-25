@@ -18,6 +18,8 @@ Usage
     juration.stringify(185, { format: 'small' }); // returns "3 mins 5 secs"
     juration.stringify(185, { format: 'micro' }); // returns "3m 5s"
     juration.stringify(185, { format: 'long' });  // returns "3 minutes 5 seconds"
+    juration.stringify(185, { format: 'long', units: 1 });  // returns "3 minutes"
+    juration.stringify(3601, { format: 'micro', units: 2 });  // returns "1h"
 
 Examples
 --------
