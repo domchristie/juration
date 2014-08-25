@@ -22,28 +22,34 @@ var HOUR = 60 * MINUTE;
 var DAY = 24 * HOUR;
 var WEEK = 7 * DAY;
 var YEAR = 31536000;
+var MONTH = YEAR / 12;
 
 $(function(){
   test("parsing words to seconds", function() {
     var testCases = [
       ["2 hrs 20 min", 2 * HOUR + 20 * MINUTE],
       ["2h20min", 2 * HOUR + 20 * MINUTE],
-      ["6 mos 1 day", 6 * 30 * DAY + DAY],
-      ["1 year 6 mos 1 day", 1 * 31536000 + 6 * 30 * DAY + DAY],
+      ["6 mos 1 day", 6 * MONTH + DAY],
+      ["1 year 6 mos 1 day", 1 * YEAR + 6 * MONTH + DAY],
       ["2.5 hrs", 2.5 * HOUR],
       ["2.5h", 2.5 * HOUR],
-      ["47 yrs 6 mos and 4.5d", 47 * 31536000 + 6 * 30 * DAY + 4.5 * DAY],
-      ["3 weeks and, 2 days", WEEK * 3 + DAY * 2],
-      ["3 weeks, plus 2 days", WEEK * 3 + DAY * 2],
-      ["3 weeks with 2 days", WEEK * 3 + DAY * 2],
+      ["47 yrs 6 mos and 4.5d", 47 * YEAR + 6 * MONTH + 4.5 * DAY],
+      ["3 weeks and, 2 days", HOUR * 24 * 7 * 3 + HOUR * 24 * 2],
+      ["3 weeks, plus 2 days", HOUR * 24 * 7 * 3 + HOUR * 24 * 2],
+      ["3 weeks with 2 days", HOUR * 24 * 7 * 3 + HOUR * 24 * 2],
       ["3 mins 4 sec", 3 * MINUTE + 4],
       ["3 Mins 4 sec", 3 * MINUTE + 4],
       ["3m 4s", 3 * MINUTE + 4],
       ["3m, 4s", 3 * MINUTE + 4],
       ["3m,4s", 3 * MINUTE + 4],
       ["3m4s", 3 * MINUTE + 4],
-      ["3mon4sec", 3 * 30 * DAY + 4],
-      ["15s", 15]
+      ["3mon4sec", 3 * MONTH + 4],
+      ["15s", 15],
+      ["1 year", 1 * YEAR],
+      ["12 mos", 1 * YEAR],
+      ["1 mos", 1 * MONTH],
+      ["18 months", 1 * YEAR + 6 * MONTH],
+      ["24 months", 2 * YEAR]
     ];
     
     for(var i = 0, len = testCases.length; i < len; i++) {
@@ -71,12 +77,13 @@ $(function(){
     var testCases = [
       [5, "5"],
       [2 * HOUR + 20 * MINUTE, "2:20:00"],
-      [6 * 30 * DAY + DAY, "6:01:00:00:00"],
+      [MONTH, "1:00:00:00:00"],
+      [6 * MONTH + 1 * DAY, "6:01:00:00:00"],
       [2 * HOUR + 30 * MINUTE, "2:30:00"],
-      [4 * HOUR + 60 + 1, '4:01:01'],
+      [4 * HOUR + 1 * MINUTE + 1, '4:01:01'],
       [2 * DAY + 15 * HOUR, "2:15:00:00"],
       [3 * DAY + 25 * MINUTE + 3, '3:00:25:03'],
-      [6 * 30 * DAY + HOUR, '6:00:01:00:00']
+      [6 * MONTH + HOUR, '6:00:01:00:00']
     ];
     
     for(var i = 0, len = testCases.length; i < len; i++) {
@@ -89,12 +96,12 @@ $(function(){
     var testCases = [
       [5, "5 secs"],
       [2 * HOUR + 20 * MINUTE, "2 hrs 20 mins"],
-      [6 * 30 * DAY + DAY, "6 mths 1 day"],
+      [6 * MONTH + DAY, "6 mths 1 day"],
       [2 * HOUR + 30 * MINUTE, "2 hrs 30 mins"],
-      [4 * HOUR + 60 + 1, '4 hrs 1 min 1 sec'],
+      [4 * HOUR + MINUTE + 1, '4 hrs 1 min 1 sec'],
       [2 * DAY + 15 * HOUR, "2 days 15 hrs"],
       [3 * DAY + 25 * MINUTE + 3, '3 days 25 mins 3 secs'],
-      [6 * 30 * DAY + HOUR, '6 mths 1 hr'],
+      [6 * MONTH + HOUR, '6 mths 1 hr'],
       
       // https://github.com/domchristie/juration/issues/4
       [2 * HOUR - 2, '1 hr 59 mins 58 secs'],
@@ -111,12 +118,12 @@ $(function(){
     var testCases = [
       [5, "5s"],
       [2 * HOUR + 20 * MINUTE, "2h 20m"],
-      [6 * 30 * DAY + DAY, "6m 1d"],
+      [6 * MONTH + DAY, "6m 1d"],
       [2 * HOUR + 30 * MINUTE, "2h 30m"],
-      [4 * HOUR + 60 + 1, '4h 1m 1s'],
+      [4 * HOUR + MINUTE + 1, '4h 1m 1s'],
       [2 * DAY + 15 * HOUR, "2d 15h"],
       [3 * DAY + 25 * MINUTE + 3, '3d 25m 3s'],
-      [6 * 30 * DAY + HOUR, '6m 1h']
+      [6 * MONTH + HOUR, '6m 1h']
     ];
     
     for(var i = 0, len = testCases.length; i < len; i++) {
@@ -129,12 +136,12 @@ $(function(){
     var testCases = [
       [5, "5 seconds"],
       [2 * HOUR + 20 * MINUTE, "2 hours 20 minutes"],
-      [6 * 30 * DAY + DAY, "6 months 1 day"],
+      [6 * MONTH + DAY, "6 months 1 day"],
       [2 * HOUR + 30 * MINUTE, "2 hours 30 minutes"],
-      [4 * HOUR + 60 + 1, '4 hours 1 minute 1 second'],
+      [4 * HOUR + MINUTE + 1, '4 hours 1 minute 1 second'],
       [2 * DAY + 15 * HOUR, "2 days 15 hours"],
       [3 * DAY + 25 * MINUTE + 3, '3 days 25 minutes 3 seconds'],
-      [6 * 30 * DAY + HOUR, '6 months 1 hour']
+      [6 * MONTH + HOUR, '6 months 1 hour']
     ];
     
     for(var i = 0, len = testCases.length; i < len; i++) {
