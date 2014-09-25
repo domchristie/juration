@@ -107,6 +107,7 @@
     var index = units.indexOf(opts.max_units);
     units = units.slice(index);
     var remaining = seconds;
+
     for(var i = 0, len = units.length; i < len; i++) {
       var unit = UNITS[units[i]];
       values[i] = Math.floor(remaining / unit.value);
