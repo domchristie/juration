@@ -92,14 +92,22 @@
       throw "juration.stringify(): format cannot be '" + options.format + "', and must be either 'micro', 'short', or 'long'";
     }
     
+    if((typeof options === 'object' && options.max_units !== undefined) && (options.max_units !== 'years' && options.max_units !== 'months' && options.max_units !== 'days' && options.max_units !== 'hours' && options.max_units !== 'minutes' && options.max_units !== 'seconds')) {
+      throw "juration.stringify(): max_units cannot be '" + options.max_units + "', and must be either 'years', 'months', 'days', 'hours', 'minutes', or 'seconds'";
+    }
+
     var defaults = {
-      format: 'short'
+      format: 'short',
+      max_units: 'years'
     };
     
     var opts = _extend(defaults, options);
     
     var units = ['years', 'months', 'days', 'hours', 'minutes', 'seconds'], values = [];
+    var index = units.indexOf(opts.max_units);
+    units = units.slice(index);
     var remaining = seconds;
+
     for(var i = 0, len = units.length; i < len; i++) {
       var unit = UNITS[units[i]];
       values[i] = Math.floor(remaining / unit.value);
