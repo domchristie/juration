@@ -169,6 +169,11 @@ $(function(){
     raises(function(){juration.stringify(8400, { format: 'horses' });});
   });
   
+  test("stringify and specify largest unit", function() {
+    var parsed = juration.stringify(129600, { max_units: 'hours' });
+    equal(parsed, "36 hrs", "We expect 129600 to be 36 hrs");
+  });
+  
 });
   
 </script>
