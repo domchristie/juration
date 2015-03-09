@@ -1,0 +1,28 @@
+{
+  "name": "juration",
+  "main": "juration.js",
+  "version": "0.0.1",
+  "homepage": "http://domchristie.github.io/juration/",
+  "authors": [
+    "Dom Christie <christiedom@gmail.com>",
+    "Victor Boivie <victor@boivie.com>"
+  ],
+  "description": "A natural language duration parser written in JavaScript",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "natural language",
+    "parser",
+    "duration"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ]
+}
