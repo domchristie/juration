@@ -130,17 +130,29 @@
     return output.replace(/\s+$/, '').replace(/^(00:)+/g, '').replace(/^0/, '');
   };
   
-  var parse = function(string) {
+  var parse = function(string, options) {
+    
+    var defaults = {
+      defaultUnit: 'seconds'
+    };
+    
+    var opts = _extend(defaults, options);
+
+    var hasMatch = false;
     
     // returns calculated values separated by spaces
     for(var unit in UNITS) {
       for(var i = 0, mLen = UNITS[unit].patterns.length; i < mLen; i++) {
         var regex = new RegExp("((?:\\d+\\.\\d+)|\\d+)\\s?(" + UNITS[unit].patterns[i] + "s?(?=\\s|\\d|\\b))", 'gi');
+        hasMatch = hasMatch || regex.test(string);
         string = string.replace(regex, function(str, p1, p2) {
           return " " + (p1 * UNITS[unit].value).toString() + " ";
         });
       }
     }
+    
+
+    if (!hasMatch && !isNaN(string) && string.trim() != '') return parse(string + opts.defaultUnit, opts);
     
     var sum = 0,
         numbers = string
