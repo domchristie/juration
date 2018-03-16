@@ -2,197 +2,221 @@
 
 <html lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>juration Tests</title>
-	<script src="../juration.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-	<script src="qunit.js"></script>
-	<link rel="stylesheet" href="qunit.css"></link>
-	<style>
-	body {
-	  width: 640px;
-	  margin: 1em auto;
-	}
-	</style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>juration Tests</title>
+    <script src="../juration.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="qunit.js"></script>
+    <link rel="stylesheet" href="qunit.css"></link>
+    <style>
+        body {
+            width: 640px;
+            margin: 1em auto;
+        }
+    </style>
 </head>
 <body>
 <script>
-var MINUTE = 60;
-var HOUR = 60 * MINUTE;
-var DAY = 24 * HOUR;
-var WEEK = 7 * DAY;
-var YEAR = 31536000;
-var MONTH = YEAR / 12;
+    var MINUTE = 60;
+    var HOUR = 60 * MINUTE;
+    var DAY = 24 * HOUR;
+    var WEEK = 7 * DAY;
+    var YEAR = 31536000;
+    var MONTH = YEAR / 12;
 
-$(function(){
-  test("parsing words to seconds", function() {
-    var testCases = [
-      ["2 hrs 20 min", 2 * HOUR + 20 * MINUTE],
-      ["2h20min", 2 * HOUR + 20 * MINUTE],
-      ["6 mos 1 day", 6 * MONTH + DAY],
-      ["1 year 6 mos 1 day", 1 * YEAR + 6 * MONTH + DAY],
-      ["2.5 hrs", 2.5 * HOUR],
-      ["2.5h", 2.5 * HOUR],
-      ["47 yrs 6 mos and 4.5d", 47 * YEAR + 6 * MONTH + 4.5 * DAY],
-      ["3 weeks and, 2 days", HOUR * 24 * 7 * 3 + HOUR * 24 * 2],
-      ["3 weeks, plus 2 days", HOUR * 24 * 7 * 3 + HOUR * 24 * 2],
-      ["3 weeks with 2 days", HOUR * 24 * 7 * 3 + HOUR * 24 * 2],
-      ["3 mins 4 sec", 3 * MINUTE + 4],
-      ["3 Mins 4 sec", 3 * MINUTE + 4],
-      ["3m 4s", 3 * MINUTE + 4],
-      ["3m, 4s", 3 * MINUTE + 4],
-      ["3m,4s", 3 * MINUTE + 4],
-      ["3m4s", 3 * MINUTE + 4],
-      ["3mon4sec", 3 * MONTH + 4],
-      ["15s", 15],
-      ["1 year", 1 * YEAR],
-      ["12 mos", 1 * YEAR],
-      ["1 mos", 1 * MONTH],
-      ["18 months", 1 * YEAR + 6 * MONTH],
-      ["24 months", 2 * YEAR]
-    ];
-    
-    for(var i = 0, len = testCases.length; i < len; i++) {
-      var parsed = juration.parse(testCases[i][0]);
-      equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
-    }
-  });
-  
-  test("parsing invalid string", function() {
-    var testCases = [
-      ["2 sausages 20 min", "juration.parse(): Unable to parse: sausages"],
-      ["2minths5dhs", "juration.parse(): Unable to parse: minths"],
-      ["165hras", "juration.parse(): Unable to parse: hras"],
-      ["15 dayz", "juration.parse(): Unable to parse: dayz"],
-      ["", "juration.parse(): Unable to parse: a falsey value"],
-      ["15ms", "juration.parse(): Unable to parse: ms"]
-    ];
-    
-    for(var i = 0, len = testCases.length; i < len; i++) {
-      raises(function(){juration.parse(testCases[i][0]);});
-    }
-  });
-  
-  test("stringifying seconds to chrono natural language strings", function() {
-    var testCases = [
-      [5, "5"],
-      [2 * HOUR + 20 * MINUTE, "2:20:00"],
-      [MONTH, "1:00:00:00:00"],
-      [6 * MONTH + 1 * DAY, "6:01:00:00:00"],
-      [2 * HOUR + 30 * MINUTE, "2:30:00"],
-      [4 * HOUR + 1 * MINUTE + 1, '4:01:01'],
-      [2 * DAY + 15 * HOUR, "2:15:00:00"],
-      [3 * DAY + 25 * MINUTE + 3, '3:00:25:03'],
-      [6 * MONTH + HOUR, '6:00:01:00:00']
-    ];
-    
-    for(var i = 0, len = testCases.length; i < len; i++) {
-      var parsed = juration.stringify(testCases[i][0], {format: 'chrono'});
-      equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
-    }
-  });
-  
-  test("stringifying seconds to short (default) natural language strings", function() {
-    var testCases = [
-      [5, "5 secs"],
-      [2 * HOUR + 20 * MINUTE, "2 hrs 20 mins"],
-      [6 * MONTH + DAY, "6 mths 1 day"],
-      [2 * HOUR + 30 * MINUTE, "2 hrs 30 mins"],
-      [4 * HOUR + MINUTE + 1, '4 hrs 1 min 1 sec'],
-      [2 * DAY + 15 * HOUR, "2 days 15 hrs"],
-      [3 * DAY + 25 * MINUTE + 3, '3 days 25 mins 3 secs'],
-      [6 * MONTH + HOUR, '6 mths 1 hr'],
-      
-      // https://github.com/domchristie/juration/issues/4
-      [2 * HOUR - 2, '1 hr 59 mins 58 secs'],
-      [2 * HOUR - 1, '1 hr 59 mins 59 secs']
-    ];
-    
-    for(var i = 0, len = testCases.length; i < len; i++) {
-      var parsed = juration.stringify(testCases[i][0]);
-      equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
-    }
-  });
-  
-  test("stringifying seconds to micro natural language strings", function() {
-    var testCases = [
-      [5, "5s"],
-      [2 * HOUR + 20 * MINUTE, "2h 20m"],
-      [6 * MONTH + DAY, "6m 1d"],
-      [2 * HOUR + 30 * MINUTE, "2h 30m"],
-      [4 * HOUR + MINUTE + 1, '4h 1m 1s'],
-      [2 * DAY + 15 * HOUR, "2d 15h"],
-      [3 * DAY + 25 * MINUTE + 3, '3d 25m 3s'],
-      [6 * MONTH + HOUR, '6m 1h']
-    ];
-    
-    for(var i = 0, len = testCases.length; i < len; i++) {
-      var parsed = juration.stringify(testCases[i][0], { format: 'micro' });
-      equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
-    }
-  });
-  
-  test("stringifying seconds to long natural language strings", function() {
-    var testCases = [
-      [5, "5 seconds"],
-      [2 * HOUR + 20 * MINUTE, "2 hours 20 minutes"],
-      [6 * MONTH + DAY, "6 months 1 day"],
-      [2 * HOUR + 30 * MINUTE, "2 hours 30 minutes"],
-      [4 * HOUR + MINUTE + 1, '4 hours 1 minute 1 second'],
-      [2 * DAY + 15 * HOUR, "2 days 15 hours"],
-      [3 * DAY + 25 * MINUTE + 3, '3 days 25 minutes 3 seconds'],
-      [6 * MONTH + HOUR, '6 months 1 hour']
-    ];
-    
-    for(var i = 0, len = testCases.length; i < len; i++) {
-      var parsed = juration.stringify(testCases[i][0], { format: 'long' });
-      equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
-    }
-  });
-  
-  test("stringifying with 'units' option", function() {
-    var testCases = [
-      [5, "", 0],
-      [5, "5 seconds", 1],
-      [5, "5 seconds", 2],
-      [5 * 60 + 5, "5 minutes", 1],
-      [5 * 60 + 5, "5 minutes 5 seconds", 2],
-      [5 * 60 + 5, "5 minutes 5 seconds", 3],
-      [5 * 3600 + 5 * 60 + 5, "5 hours", 1],
-      [5 * 3600 + 5 * 60 + 5, "5 hours 5 minutes", 2],
-      [5 * 3600 + 5 * 60 + 5, "5 hours 5 minutes 5 seconds", 3],
-      [5 * 3600 + 5 * 60 + 5, "5 hours 5 minutes 5 seconds", 4],
-      [5 * 3600 + 0 * 60 + 5, "5 hours", 2],
-      [5 * 3600 + 0 * 60 + 5, "5 hours 5 seconds", 3]
-    ];
+    $(function () {
+        test("parsing words to seconds", function () {
+            var testCases = [
+                ["2 hrs 20 min", 2 * HOUR + 20 * MINUTE],
+                ["2h20min", 2 * HOUR + 20 * MINUTE],
+                ["6 mos 1 day", 6 * MONTH + DAY],
+                ["1 year 6 mos 1 day", 1 * YEAR + 6 * MONTH + DAY],
+                ["2.5 hrs", 2.5 * HOUR],
+                ["2.5h", 2.5 * HOUR],
+                ["47 yrs 6 mos and 4.5d", 47 * YEAR + 6 * MONTH + 4.5 * DAY],
+                ["3 weeks and, 2 days", HOUR * 24 * 7 * 3 + HOUR * 24 * 2],
+                ["3 weeks, plus 2 days", HOUR * 24 * 7 * 3 + HOUR * 24 * 2],
+                ["3 weeks with 2 days", HOUR * 24 * 7 * 3 + HOUR * 24 * 2],
+                ["3 mins 4 sec", 3 * MINUTE + 4],
+                ["3 mins 4 sec", 3 * MINUTE + 4],
+                ["3m 4s", 3 * MINUTE + 4],
+                ["3m, 4s", 3 * MINUTE + 4],
+                ["3m,4s", 3 * MINUTE + 4],
+                ["3m4s", 3 * MINUTE + 4],
+                ["3mon4sec", 3 * MONTH + 4],
+                ["15s", 15],
+                ["1 year", 1 * YEAR],
+                ["12 mos", 1 * YEAR],
+                ["1 mos", 1 * MONTH],
+                ["1 M", 1 * MONTH],
+                ["18 months", 1 * YEAR + 6 * MONTH],
+                ["24 months", 2 * YEAR]
+            ];
 
-    for(var i = 0, len = testCases.length; i < len; i++) {
-      var parsed = juration.stringify(testCases[i][0], { format: 'long', units: testCases[i][2] });
-      equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " with units " + testCases[i][2] + " to be " + testCases[i][1]);
-    }
-  });
+            for (var i = 0, len = testCases.length; i < len; i++) {
+                var parsed = juration.parse(testCases[i][0]);
+                equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
+            }
+        });
 
-  test("stringifying non-numeric values", function() {
-    var testCases = [
-      ["", "juration.stringify(): Unable to stringify a non-numeric value"],
-      ["a bunt", "juration.stringify(): Unable to stringify a non-numeric value"],
-      [null, "juration.stringify(): Unable to stringify a non-numeric value"]
-    ];
-    
-    for(var i = 0, len = testCases.length; i < len; i++) {
-      raises(function(){juration.stringify(testCases[i][0]);});
-    }
-  });
-  
-  test("stringifying values with an undefined/unknown format", function() {
-    var parsed = juration.stringify(8400, { format: undefined });
-    equal(parsed, "2 hrs 20 mins", "We expect 8400 to be 2 hrs 20 mins");
-    
-    raises(function(){juration.stringify(8400, { format: 'horses' });});
-  });
-  
-});
-  
+        test("parsing words to seconds and back", function () {
+            var testCase = ["6M 1d", "6M 1d"];
+
+            var parsed = juration.parse(testCase[0]);
+            var stringified = juration.stringify(parsed, {format: 'micro'});
+            equal(stringified, testCase[1], "We expect " + testCase[0] + " to be " + testCase[1]);
+        });
+
+        test("parsing invalid string", function () {
+            var testCases = [
+                ["2 sausages 20 min", "juration.parse(): Unable to parse: sausages"],
+                ["2minths5dhs", "juration.parse(): Unable to parse: minths"],
+                ["165hras", "juration.parse(): Unable to parse: hras"],
+                ["15 dayz", "juration.parse(): Unable to parse: dayz"],
+                ["", "juration.parse(): Unable to parse: a falsey value"],
+                ["15ms", "juration.parse(): Unable to parse: ms"],
+                ["3 Mins 4 sec", "juration.parse(): Unable to parse: Mins"]
+            ];
+
+            for (var i = 0, len = testCases.length; i < len; i++) {
+                raises(function () {
+                    juration.parse(testCases[i][0]);
+                });
+            }
+        });
+
+        test("stringifying seconds to chrono natural language strings", function () {
+            var testCases = [
+                [5, "5"],
+                [2 * HOUR + 20 * MINUTE, "2:20:00"],
+                [MONTH, "1:00:00:00:00"],
+                [6 * MONTH + 1 * DAY, "6:01:00:00:00"],
+                [2 * HOUR + 30 * MINUTE, "2:30:00"],
+                [4 * HOUR + 1 * MINUTE + 1, '4:01:01'],
+                [2 * DAY + 15 * HOUR, "2:15:00:00"],
+                [3 * DAY + 25 * MINUTE + 3, '3:00:25:03'],
+                [6 * MONTH + HOUR, '6:00:01:00:00']
+            ];
+
+            for (var i = 0, len = testCases.length; i < len; i++) {
+                var parsed = juration.stringify(testCases[i][0], {format: 'chrono'});
+                equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
+            }
+        });
+
+        test("stringifying seconds to short (default) natural language strings", function () {
+            var testCases = [
+                [5, "5 secs"],
+                [2 * HOUR + 20 * MINUTE, "2 hrs 20 mins"],
+                [6 * MONTH + DAY, "6 mths 1 day"],
+                [2 * HOUR + 30 * MINUTE, "2 hrs 30 mins"],
+                [4 * HOUR + MINUTE + 1, '4 hrs 1 min 1 sec'],
+                [2 * DAY + 15 * HOUR, "2 days 15 hrs"],
+                [3 * DAY + 25 * MINUTE + 3, '3 days 25 mins 3 secs'],
+                [6 * MONTH + HOUR, '6 mths 1 hr'],
+
+                // https://github.com/domchristie/juration/issues/4
+                [2 * HOUR - 2, '1 hr 59 mins 58 secs'],
+                [2 * HOUR - 1, '1 hr 59 mins 59 secs']
+            ];
+
+            for (var i = 0, len = testCases.length; i < len; i++) {
+                var parsed = juration.stringify(testCases[i][0]);
+                equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
+            }
+        });
+
+        test("stringifying seconds to micro natural language strings", function () {
+            var testCases = [
+                [5, "5s"],
+                [2 * HOUR + 20 * MINUTE, "2h 20m"],
+                [6 * MONTH + DAY, "6M 1d"],
+                [2 * HOUR + 30 * MINUTE, "2h 30m"],
+                [4 * HOUR + MINUTE + 1, '4h 1m 1s'],
+                [2 * DAY + 15 * HOUR, "2d 15h"],
+                [3 * DAY + 25 * MINUTE + 3, '3d 25m 3s'],
+                [6 * MONTH + HOUR, '6M 1h']
+            ];
+
+            for (var i = 0, len = testCases.length; i < len; i++) {
+                var parsed = juration.stringify(testCases[i][0], {format: 'micro'});
+                equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
+            }
+        });
+
+        test("stringifying seconds to micro and back should return the same", function () {
+            var testCase = [6 * MONTH + HOUR, 6 * MONTH + HOUR];
+
+            var parsed = juration.stringify(testCase[0], {format: 'long'});
+            var convertBack = juration.parse(parsed);
+            equal(convertBack, testCase[1], "We expect " + testCase[0] + " to be " + testCase[1]);
+        });
+
+        test("stringifying seconds to long natural language strings", function () {
+            var testCases = [
+                [5, "5 seconds"],
+                [2 * HOUR + 20 * MINUTE, "2 hours 20 minutes"],
+                [6 * MONTH + DAY, "6 months 1 day"],
+                [2 * HOUR + 30 * MINUTE, "2 hours 30 minutes"],
+                [4 * HOUR + MINUTE + 1, '4 hours 1 minute 1 second'],
+                [2 * DAY + 15 * HOUR, "2 days 15 hours"],
+                [3 * DAY + 25 * MINUTE + 3, '3 days 25 minutes 3 seconds'],
+                [6 * MONTH + HOUR, '6 months 1 hour']
+            ];
+
+            for (var i = 0, len = testCases.length; i < len; i++) {
+                var parsed = juration.stringify(testCases[i][0], {format: 'long'});
+                equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " to be " + testCases[i][1]);
+            }
+        });
+
+        test("stringifying with 'units' option", function () {
+            var testCases = [
+                [5, "", 0],
+                [5, "5 seconds", 1],
+                [5, "5 seconds", 2],
+                [5 * 60 + 5, "5 minutes", 1],
+                [5 * 60 + 5, "5 minutes 5 seconds", 2],
+                [5 * 60 + 5, "5 minutes 5 seconds", 3],
+                [5 * 3600 + 5 * 60 + 5, "5 hours", 1],
+                [5 * 3600 + 5 * 60 + 5, "5 hours 5 minutes", 2],
+                [5 * 3600 + 5 * 60 + 5, "5 hours 5 minutes 5 seconds", 3],
+                [5 * 3600 + 5 * 60 + 5, "5 hours 5 minutes 5 seconds", 4],
+                [5 * 3600 + 0 * 60 + 5, "5 hours", 2],
+                [5 * 3600 + 0 * 60 + 5, "5 hours 5 seconds", 3]
+            ];
+
+            for (var i = 0, len = testCases.length; i < len; i++) {
+                var parsed = juration.stringify(testCases[i][0], {format: 'long', units: testCases[i][2]});
+                equal(parsed, testCases[i][1], "We expect " + testCases[i][0] + " with units " + testCases[i][2] + " to be " + testCases[i][1]);
+            }
+        });
+
+        test("stringifying non-numeric values", function () {
+            var testCases = [
+                ["", "juration.stringify(): Unable to stringify a non-numeric value"],
+                ["a bunt", "juration.stringify(): Unable to stringify a non-numeric value"],
+                [null, "juration.stringify(): Unable to stringify a non-numeric value"]
+            ];
+
+            for (var i = 0, len = testCases.length; i < len; i++) {
+                raises(function () {
+                    juration.stringify(testCases[i][0]);
+                });
+            }
+        });
+
+        test("stringifying values with an undefined/unknown format", function () {
+            var parsed = juration.stringify(8400, {format: undefined});
+            equal(parsed, "2 hrs 20 mins", "We expect 8400 to be 2 hrs 20 mins");
+
+            raises(function () {
+                juration.stringify(8400, {format: 'horses'});
+            });
+        });
+
+    });
+
 </script>
 <h1 id="qunit-header">juration Tests</h1>
 <h2 id="qunit-banner"></h2>

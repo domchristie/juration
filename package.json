@@ -1,0 +1,25 @@
+{
+  "name": "juration",
+  "version": "1.0.0",
+  "description": "A natural language duration parser written in JavaScript",
+  "main": "juration.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nclaeys/juration.git"
+  },
+  "author":  [
+    "Dom Christie <christiedom@gmail.com>",
+    "Victor Boivie <victor@boivie.com>"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nclaeys/juration/issues"
+  },
+  "homepage": "https://github.com/nclaeys/juration#readme"
+}
