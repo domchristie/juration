@@ -65,7 +65,7 @@
       value: 2628000,
       formats: {
         'chrono': ':',
-        'micro':  'm',
+        'micro':  'M',
         'short':  'mth',
         'long':   'month'
       }
