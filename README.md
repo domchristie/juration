@@ -21,6 +21,11 @@ Usage
     juration.stringify(185, { format: 'long', units: 1 });  // returns "3 minutes"
     juration.stringify(3601, { format: 'micro', units: 2 });  // returns "1h"
 
+### Localization
+
+	juration.locale('en'); // default localization "en"
+	juration.locale('tr-TR'); // Turkish localization.
+
 Examples
 --------
 Parse-able strings:

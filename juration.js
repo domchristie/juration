@@ -8,76 +8,151 @@
  */
 
 (function() {
+  var LOCALE = 'en';
 
   var UNITS = {
-    seconds: {
-      patterns: ['second', 'sec', 's'],
-      value: 1,
-      formats: {
-        'chrono': '',
-        'micro':  's',
-        'short':  'sec',
-        'long':   'second'
+    'en': {
+      seconds: {
+        patterns: ['second', 'sec', 's'],
+        value: 1,
+        formats: {
+          'chrono': '',
+          'micro':  's',
+          'short':  'sec',
+          'long':   'second'
+        }
+      },
+      minutes: {
+        patterns: ['minute', 'min', 'm(?!s)'],
+        value: 60,
+        formats: {
+          'chrono': ':',
+          'micro':  'm',
+          'short':  'min',
+          'long':   'minute'
+        }
+      },
+      hours: {
+        patterns: ['hour', 'hr', 'h'],
+        value: 3600,
+        formats: {
+          'chrono': ':',
+          'micro':  'h',
+          'short':  'hr',
+          'long':   'hour'
+        }
+      },
+      days: {
+        patterns: ['day', 'dy', 'd'],
+        value: 86400,
+        formats: {
+          'chrono': ':',
+          'micro':  'd',
+          'short':  'day',
+          'long':   'day'
+        }
+      },
+      weeks: {
+        patterns: ['week', 'wk', 'w'],
+        value: 604800,
+        formats: {
+          'chrono': ':',
+          'micro':  'w',
+          'short':  'wk',
+          'long':   'week'
+        }
+      },
+      months: {
+        patterns: ['month', 'mon', 'mo', 'mth'],
+        value: 2628000,
+        formats: {
+          'chrono': ':',
+          'micro':  'm',
+          'short':  'mth',
+          'long':   'month'
+        }
+      },
+      years: {
+        patterns: ['year', 'yr', 'y'],
+        value: 31536000,
+        formats: {
+          'chrono': ':',
+          'micro':  'y',
+          'short':  'yr',
+          'long':   'year'
+        }
       }
     },
-    minutes: {
-      patterns: ['minute', 'min', 'm(?!s)'],
-      value: 60,
-      formats: {
-        'chrono': ':',
-        'micro':  'm',
-        'short':  'min',
-        'long':   'minute'
-      }
-    },
-    hours: {
-      patterns: ['hour', 'hr', 'h'],
-      value: 3600,
-      formats: {
-        'chrono': ':',
-        'micro':  'h',
-        'short':  'hr',
-        'long':   'hour'
-      }
-    },
-    days: {
-      patterns: ['day', 'dy', 'd'],
-      value: 86400,
-      formats: {
-        'chrono': ':',
-        'micro':  'd',
-        'short':  'day',
-        'long':   'day'
-      }
-    },
-    weeks: {
-      patterns: ['week', 'wk', 'w'],
-      value: 604800,
-      formats: {
-        'chrono': ':',
-        'micro':  'w',
-        'short':  'wk',
-        'long':   'week'
-      }
-    },
-    months: {
-      patterns: ['month', 'mon', 'mo', 'mth'],
-      value: 2628000,
-      formats: {
-        'chrono': ':',
-        'micro':  'm',
-        'short':  'mth',
-        'long':   'month'
-      }
-    },
-    years: {
-      patterns: ['year', 'yr', 'y'],
-      value: 31536000,
-      formats: {
-        'chrono': ':',
-        'micro':  'y',
-        'short':  'yr',
-        'long':   'year'
+    'tr-TR': {
+      seconds: {
+        patterns: ['saniye', 'san', 'sn'],
+        value: 1,
+        formats: {
+          'chrono': '',
+          'micro':  'sn',
+          'short':  'san',
+          'long':   'saniye'
+        }
+      },
+      minutes: {
+        patterns: ['dakika', 'dk', 'd(?!sn)'],
+        value: 60,
+        formats: {
+          'chrono': ':',
+          'micro':  'd',
+          'short':  'dk',
+          'long':   'dakika'
+        }
+      },
+      hours: {
+        patterns: ['saat', 'sa', 's'],
+        value: 3600,
+        formats: {
+          'chrono': ':',
+          'micro':  's',
+          'short':  'sa',
+          'long':   'saat'
+        }
+      },
+      days: {
+        patterns: ['gün', 'gn', 'g'],
+        value: 86400,
+        formats: {
+          'chrono': ':',
+          'micro':  'g',
+          'short':  'gn',
+          'long':   'gün'
+        }
+      },
+      weeks: {
+        patterns: ['hafta', 'hft', 'h'],
+        value: 604800,
+        formats: {
+          'chrono': ':',
+          'micro':  'h',
+          'short':  'hft',
+          'long':   'hafta'
+        }
+      },
+      months: {
+        patterns: ['ay', 'ay', 'ay', 'a'],
+        value: 2628000,
+        formats: {
+          'chrono': ':',
+          'micro':  'a',
+          'short':  'ay',
+          'long':   'ay'
+        }
+      },
+      years: {
+        patterns: ['yıl', 'yl', 'y'],
+        value: 31536000,
+        formats: {
+          'chrono': ':',
+          'micro':  'y',
+          'short':  'yl',
+          'long':   'yıl'
+        }
       }
     }
   };
@@ -105,7 +180,7 @@
     for(var i = 0, len = units.length;
         i < len && (opts.units == undefined || activeUnits < opts.units);
         i++) {
-      var unit = UNITS[units[i]];
+      var unit = UNITS[LOCALE][units[i]];
       values[i] = Math.floor(remaining / unit.value);
       if (values[i] > 0 || activeUnits > 0)
         activeUnits++;
@@ -133,11 +208,11 @@
   var parse = function(string) {
     
     // returns calculated values separated by spaces
-    for(var unit in UNITS) {
-      for(var i = 0, mLen = UNITS[unit].patterns.length; i < mLen; i++) {
-        var regex = new RegExp("((?:\\d+\\.\\d+)|\\d+)\\s?(" + UNITS[unit].patterns[i] + "s?(?=\\s|\\d|\\b))", 'gi');
+    for(var unit in UNITS[LOCALE]) {
+      for(var i = 0, mLen = UNITS[LOCALE][unit].patterns.length; i < mLen; i++) {
+        var regex = new RegExp("((?:\\d+\\.\\d+)|\\d+)\\s?(" + UNITS[LOCALE][unit].patterns[i] + "s?(?=\\s|\\d|\\b))", 'gi');
         string = string.replace(regex, function(str, p1, p2) {
-          return " " + (p1 * UNITS[unit].value).toString() + " ";
+          return " " + (p1 * UNITS[LOCALE][unit].value).toString() + " ";
         });
       }
     }
@@ -160,6 +235,15 @@
     }
     return sum;
   };
+
+  var locale = function(l) {
+    if (UNITS[l] !== undefined) {
+      LOCALE = l;
+    }
+    else {
+      throw new Error("juration " + l + " locale not found");
+    }
+  };
   
   // _padLeft('5', '0', 2); // 05
   var _padLeft = function(s, c, n) {
@@ -176,6 +260,9 @@
   };
   
   var _pluralize = function(count, singular) {
+    if (LOCALE === 'tr-TR') // Duration cannot be plural in Turkish.
+      return singular;
+
     return count == 1 ? singular : singular + "s";
   };
   
@@ -195,7 +282,8 @@
   var juration = {
     parse: parse,
     stringify: stringify,
-    humanize: stringify
+    humanize: stringify,
+    locale: locale,
   };
 
   if ( typeof module === "object" && module && typeof module.exports === "object" ) {
